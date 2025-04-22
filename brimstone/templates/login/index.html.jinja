@@ -1,0 +1,7 @@
+{% set styles = ['pico.red.min.css'] if styles is not defined else ['pico.red.min.css'] + styles %}
+{% extends "base.html.jinja" %}
+{% block content %}
+<main class="container">
+    {{ htmx_login_form() }}
+</main>
+{% endblock %}

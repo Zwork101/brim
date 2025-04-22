@@ -1,0 +1,13 @@
+<form method="POST" hx-post="{{ url_for('login.login_form') }}" hx-swap="outerHTML">
+    {{ form.csrf_token }}
+    {% if invalid_username %}
+    <p>Invalid Username</p>
+    {% endif %}
+    {{ form.username.label }} {{ form.username() }}
+    {% if invalid_password %}
+    <p>Invalid Password</p>
+    {% endif %}
+    {{ form.password.label }} {{ form.password() }}
+    {{ form.remember_me.label }} {{ form.remember_me() }}
+    <input type="submit" value="login">
+</form>

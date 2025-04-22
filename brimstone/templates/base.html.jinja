@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{{ title }}</title>
+    {% block stylesheets %}
+    {% set styles = ['base.css'] + styles %}
+    {% for style in styles %}
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/' + style) }}">
+    {% endfor %}
+    {% endblock %}
+    {% block scripts %}
+    {% set scripts = ['htmx.min.js'] + scripts if scripts is defined else ['htmx.min.js'] %}
+    {% for script in scripts %}
+      <script src="{{ url_for('static', filename='js/' + script) }}"></script>
+    {% endfor %}
+    {% endblock %}
+  </head>
+  <body>
+    {% block content %}{% endblock %}
+  </body>
+</html>
