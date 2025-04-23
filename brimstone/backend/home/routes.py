@@ -1,8 +1,6 @@
 import time
 import sys
 
-from quart_auth import current_user
-
 from backend.htmx import htmx
 
 from quart import Blueprint, current_app, render_template

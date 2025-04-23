@@ -5,6 +5,7 @@ import sys
 
 from markupsafe import Markup
 from quart import Quart, make_response
+from quart.typing import ResponseTypes
 
 
 class HTMX:
@@ -20,9 +21,12 @@ class HTMX:
             app.jinja_env.globals[component_name] = component_method
     
     @classmethod
-    async def redirect(cls, location: str):
+    async def redirect(cls, location: str, boost: bool = False) -> ResponseTypes:
         resp = await make_response("")
-        resp.headers["HX-Redirect"] = location
+        if boost:
+            resp.headers["HX-Location"] = location
+        else:
+            resp.headers["HX-Redirect"] = location
         return resp
     
     def component(self, route: "Callable[..., CoroutineType[Any, Any, Any]]") -> "Callable[..., CoroutineType[Any, Any, Any]]":

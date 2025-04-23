@@ -1,3 +1,22 @@
+[project]
+name = "brim"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "aiosqlite>=0.21.0",
+    "bs4>=0.0.2",
+    "pytest-asyncio>=0.26.0",
+    "pytest-dependency>=0.6.0",
+    "python-dotenv>=1.1.0",
+    "quart>=0.20.0",
+    "quart-auth>=0.11.0",
+    "quart-wtforms>=1.0.3",
+    "sqlalchemy[asyncio]>=2.0.40",
+]
+
+
 [tool.pytest.ini_options]
 asyncio_mode = "strict"
 asyncio_default_fixture_loop_scope = "session"

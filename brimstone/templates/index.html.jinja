@@ -1,13 +1,14 @@
-{% set styles = ['index.css'] if styles is not defined else ['index.css'] + styles %}
 {% extends "base.html.jinja" %}
 {% block content %}
-<main>
-    <section>
-        <h1>Brim is now ready</h1>
-        <h2>Change this file as you please</h2>
-    </section>
-    <section hx-get="{{ url_for('home.stats') }}" hx-trigger="every 2s" hx-swap="innerHTML">
-        {{ htmx_stats() }}
-    </section>
+<main class="radiant-background flex flex-col gap-6 items-center w-full">
+    <div class="max-w-9/10 md:max-w-[50%] w-full">
+        <section classes="flex flex-col">
+            <h1>Brim is now ready!</h1>
+            <h2>Change this file as you please. It will update in real time!</h2>
+        </section>
+        <section hx-get="{{ url_for('home.stats') }}" hx-trigger="every 2s" hx-swap="innerHTML">
+            {{ htmx_stats() }}
+        </section>
+    </div>
 </main>
 {% endblock %}

@@ -38,7 +38,6 @@ class LazyUser(AuthUser, base):
         return getattr(self._user, name)
 
 
-
 auth = QuartAuth(user_class=LazyUser)
 current_user: LazyUser = current_user
 

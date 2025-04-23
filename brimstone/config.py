@@ -8,10 +8,14 @@ class DevelopmentConfig(Config):
     DEBUG = True
     SERVER_NAME = "127.0.0.1:8080"
     SQLALCHEMY_DATABASE_URI = "sqlite+aiosqlite:///brimstone.db"
+    TEMPLATES_AUTO_RELOAD = True
+    EXPLAIN_TEMPLATE_LOADING = True
     
+    BRIM_LIVE_RELOAD = True
     
 class TestingConfig(Config):
     DEBUG = False
+    TESTING = True
     SERVER_NAME = "127.0.0.1:8080"
     SQLALCHEMY_DATABASE_URI = "sqlite+aiosqlite:///brimstone.db"
 

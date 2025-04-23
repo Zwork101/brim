@@ -1,14 +1,16 @@
 from asyncio import get_event_loop
 from functools import wraps
-
-import click
-from sqlalchemy.ext.asyncio import async_sessionmaker
+from pathlib import Path
+from typing import Optional
 
 from backend.db import Base
-
-from quart import Quart
-
 from seeds import get_seeds, group_seeds, plant_seeds
+
+import click
+from pytailwindcss import run as tailwind_run, install as tailwind_install
+from sqlalchemy.ext.asyncio import async_sessionmaker
+from quart import Quart, current_app
+from quart.cli import with_appcontext
 
 
 def run_sync(func):
@@ -19,6 +21,28 @@ def run_sync(func):
 
 
 def setup_cli(app: Quart):
+    
+    @app.cli.group()
+    def tailwind():
+        pass
+    
+    @tailwind.command()
+    @click.option("--version")
+    def install(version: Optional[str] = None):
+        tailwind_install(version)  # pyright: ignore [reportArgumentType]
+        
+    @tailwind.command()
+    @click.option("--no-minify", default=False)
+    @click.option("--no-optimize", default=False)
+    @with_appcontext
+    def generate(no_minify: bool, no_optimize: bool):
+        tailwind_run(
+            ['--input', str(Path(current_app.static_folder).parent.joinpath(Path("_src/input.css")))] + # pyright: ignore [reportArgumentType]
+            ['--output', str(Path(current_app.static_folder).joinpath("css/output.css"))] + # pyright: ignore [reportArgumentType]
+            (['--minify'] if not no_minify else []) +
+            (['--optimize'] if not no_optimize else []) +
+            ['--cwd', str(Path(current_app.template_folder).resolve())]  # pyright: ignore [reportArgumentType]
+        )
     
     @app.cli.group()
     def db():

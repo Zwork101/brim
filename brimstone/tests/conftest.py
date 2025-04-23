@@ -1,6 +1,6 @@
 from quart.typing import TestAppProtocol, TestClientProtocol
 from config import TestingConfig
-from factory import create_app
+from app import create_app
 
 import pytest
 
