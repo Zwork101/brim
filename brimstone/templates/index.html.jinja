@@ -1,12 +1,12 @@
 {% extends "base.html.jinja" %}
 {% block content %}
-<main class="radiant-background flex flex-col gap-6 items-center w-full">
-    <div class="max-w-9/10 md:max-w-[50%] w-full">
-        <section classes="flex flex-col">
-            <h1>Brim is now ready!</h1>
-            <h2>Change this file as you please. It will update in real time!</h2>
+<main class="radiant-background flex flex-col items-center w-full h-screen justify-center">
+    <div class="max-w-9/10 md:max-w-[50%] w-full text-center bg-black/40 gap-4 flex flex-col p-4 rounded-md">
+        <section class="flex flex-col gap-2">
+            <h1 class="text-4xl md:text-6xl">Brim is now ready!</h1>
+            <h2 class="text-2xl md:text-3xl">Change this file as you please. It will update in real time!</h2>
         </section>
-        <section hx-get="{{ url_for('home.stats') }}" hx-trigger="every 2s" hx-swap="innerHTML">
+        <section class="text-xl flex flex-col gap-2" hx-get="{{ url_for('home.stats') }}" hx-trigger="every 2s" hx-swap="innerHTML">
             {{ htmx_stats() }}
         </section>
     </div>

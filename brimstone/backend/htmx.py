@@ -4,11 +4,18 @@ from typing import Any, Callable, Optional
 import sys
 
 from markupsafe import Markup
-from quart import Quart, make_response
-from quart.typing import ResponseTypes
+from quart import Quart, request, redirect
+from flask import make_response
+from werkzeug.wrappers import Response as WerkzeugResponse
+
+class HTMXMeta(type):
+    
+    @property
+    def request(cls):
+        return "HX-Request" in request.headers
 
 
-class HTMX:
+class HTMX(metaclass=HTMXMeta):
     
     def __init__(self, app: Optional[Quart] = None):
         if app is not None:
@@ -19,15 +26,16 @@ class HTMX:
     def init_app(self, app: Quart):
         for component_name, component_method in self._components.items():
             app.jinja_env.globals[component_name] = component_method
+        app.redirect = self.redirect
     
     @classmethod
-    async def redirect(cls, location: str, boost: bool = False) -> ResponseTypes:
-        resp = await make_response("")
-        if boost:
+    def redirect(cls, location: str, code: int = 302) -> WerkzeugResponse:
+        if cls.request:
+            resp = make_response("")
             resp.headers["HX-Location"] = location
+            return resp
         else:
-            resp.headers["HX-Redirect"] = location
-        return resp
+            return redirect(location, code)
     
     def component(self, route: "Callable[..., CoroutineType[Any, Any, Any]]") -> "Callable[..., CoroutineType[Any, Any, Any]]":
         @wraps(route)

@@ -5,14 +5,14 @@ from backend.db import db, User
 from backend.htmx import htmx
 from .forms import LoginForm
 
-from quart import Blueprint, redirect, render_template, url_for
-from quart_auth import login_user
+from quart import Blueprint, redirect, render_template, request, url_for
+from quart_auth import login_user, logout_user
 from sqlalchemy import select
 from werkzeug.security import check_password_hash
 
-login = Blueprint("login", __name__)
+login = Blueprint("login", __name__, url_prefix="/login")
 
-@login.route("/login")
+@login.route("/")
 async def login_page():
     if await current_user.is_authenticated:
         return redirect(
@@ -21,7 +21,13 @@ async def login_page():
     
     return await render_template("login/index.html.jinja")
 
-@login.route("/login/login_form", methods=["GET", "POST"])
+@login.route("/logout")
+async def logout():
+    if await current_user.is_authenticated:
+        logout_user()
+    return redirect("home.index")
+
+@login.route("/login_form", methods=["GET", "POST"])
 @htmx.component
 async def login_form():
     
@@ -41,13 +47,10 @@ async def login_form():
             else:
                 if check_password_hash(claimed_user.password, form.password.data or ""):
                     login_user(LazyUser(str(claimed_user.id)), form.remember_me.data)
-                    return await htmx.redirect(
-                        url_for("home.index")
-                    )
+                    return redirect(url_for("home.index"))
                 else:
                     invalid_password = True
-    else:
+    elif request.method == "POST":
         logging.debug(f"Unsuccessful login attempt from claimed '{form.username.data}'")
-        print(f"Unsuccessful login attempt from claimed '{form.username.data}'")
             
     return await render_template("login/components/login.html.jinja", form=form, invalid_username=invalid_username, invalid_password=invalid_password)

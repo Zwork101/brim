@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Optional
 
 from backend.db import Base
+from development import dev_engine
 from seeds import get_seeds, group_seeds, plant_seeds
 
 import click
@@ -37,11 +38,7 @@ def setup_cli(app: Quart):
     @with_appcontext
     def generate(no_minify: bool, no_optimize: bool):
         tailwind_run(
-            ['--input', str(Path(current_app.static_folder).parent.joinpath(Path("_src/input.css")))] + # pyright: ignore [reportArgumentType]
-            ['--output', str(Path(current_app.static_folder).joinpath("css/output.css"))] + # pyright: ignore [reportArgumentType]
-            (['--minify'] if not no_minify else []) +
-            (['--optimize'] if not no_optimize else []) +
-            ['--cwd', str(Path(current_app.template_folder).resolve())]  # pyright: ignore [reportArgumentType]
+            dev_engine.create_tailwind_args(current_app, no_minify, no_optimize)
         )
     
     @app.cli.group()

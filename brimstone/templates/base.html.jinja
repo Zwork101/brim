@@ -18,11 +18,25 @@
       <script src="{{ url_for('static', filename='js/' + script) }}"></script>
     {% endfor %}
     {% endblock %}
+    {% if __brim_template_signature is defined %}
+      <script>
+      document.addEventListener("htmx:afterSwap", function(detail) {
+        if (detail.target.nodeName == "BODY") {
+          setTimeout(function() {
+            const cssFile = document.querySelector(`link[href*="output.css"]`);
+            let cssFileUrl = new URL(cssFile.href);
+            cssFileUrl.searchParams.set("t", new Date().getTime().toString());
+            cssFile.href = cssFileUrl.toString();
+          }, 100)
+        } 
+      })
+      </script>
+    {% endif %}
   </head>
   <body>
     {% block content %}{% endblock %}
-    {% if __brim_template_signature is defined %}
-      <div style="display: none;" hx-get="{{ __brim_template_url }}" hx-target="body" hx-trigger="every .5s" hx-swap="innerHTML">
+    {% if g._brim_template_signature is defined %}
+      <div style="display: none;" hx-get="{{ g._brim_template_url }}" hx-target="body" hx-trigger="every .5s" hx-swap="innerHTML"></div>
     {% endif %}
   </body>
 </html>

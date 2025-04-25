@@ -15,3 +15,7 @@ wheels/
 
 # Testing DB
 brimstone.db
+
+# SSL Certificates
+*.pem
+.certs
